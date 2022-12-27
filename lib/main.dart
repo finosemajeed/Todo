@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:todo_hive/database/model/todo_data_model.dart';
+
 import 'package:todo_hive/presentation/main_screen/main_screen.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Hive.initFlutter();
+  Hive.registerAdapter(TodoDataModelAdapter());
+  await Hive.openBox<TodoDataModel>('Todo');
   runApp(MyApp());
 }
 

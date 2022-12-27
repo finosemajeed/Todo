@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:todo_hive/core/color_config.dart';
+import 'package:todo_hive/database/db_function.dart';
+import 'package:todo_hive/database/no.dart';
+import 'package:todo_hive/presentation/home_screen/add_task_screen.dart';
 import 'package:todo_hive/presentation/home_screen/home_screen.dart';
 import 'package:todo_hive/presentation/main_screen/widgets/custom_bottomnaviagtion_bar.dart';
 import 'package:todo_hive/presentation/status_screen/status_screen.dart';
@@ -14,6 +17,7 @@ class MainScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    DbFunctions().refreshItems();
     return Scaffold(
       drawer: Drawer(),
       backgroundColor: backGroundColor,
@@ -41,7 +45,10 @@ class MainScreen extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         elevation: 20,
-        onPressed: () => {},
+        onPressed: () => {
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: ((context) => AddTaskScreen())))
+        },
         backgroundColor: kBlueButton,
         child: Icon(
           Icons.add,

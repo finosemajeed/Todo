@@ -2,14 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:todo_hive/core/color_config.dart';
+import 'package:todo_hive/database/db_function.dart';
+import 'package:todo_hive/database/model/todo_data_model.dart';
+import 'package:todo_hive/database/no.dart';
 
 class AddTaskScreen extends StatelessWidget {
   AddTaskScreen({super.key});
 
   TextEditingController titleController = TextEditingController();
+  TextEditingController descriptionController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    DbFunctions().refreshItems();
     return Scaffold(
       backgroundColor: backGroundColor,
       appBar: AppBar(
@@ -46,7 +51,7 @@ class AddTaskScreen extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
               child: TextFormField(
                 style: TextStyle(color: kWhite),
-                controller: titleController,
+                controller: descriptionController,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: "Description",
@@ -72,7 +77,9 @@ class AddTaskScreen extends StatelessWidget {
                 minimumSize: Size(150, 40),
               ),
               onPressed: () {
-            
+                createTodo();
+                titleController.text = "";
+                descriptionController.text = "";
               },
               child: Text("Confirm"),
             ),
@@ -80,5 +87,27 @@ class AddTaskScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void updateTodo(int itemKey) {
+    if (itemKey != null) {
+      final existingItem =
+          todoNotifier.value.firstWher((element) => element['id'] == itemKey);
+      titleController.text = existingItem['title'];
+      descriptionController.text = existingItem['description'];
+    }
+    final title = titleController.text.trim();
+    final description = descriptionController.text.trim();
+    final TodoDataModel newTodo =
+        TodoDataModel(title: title, description: description);
+    DbFunctions().updateTodo(itemKey, newTodo);
+  }
+
+  void createTodo() {
+    final title = titleController.text.trim();
+    final description = descriptionController.text.trim();
+    final TodoDataModel todo =
+        TodoDataModel(title: title, description: description);
+    DbFunctions().createTodo(todo);
   }
 }

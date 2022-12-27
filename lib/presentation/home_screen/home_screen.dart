@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:todo_hive/core/color_config.dart';
+import 'package:todo_hive/database/db_function.dart';
+import 'package:todo_hive/database/no.dart';
 import 'package:todo_hive/presentation/home_screen/add_task_screen.dart';
 import 'package:todo_hive/presentation/home_screen/widgets/add_todo_card.dart';
 import 'package:todo_hive/presentation/home_screen/widgets/custom_todo_card.dart';
@@ -13,6 +15,7 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+      DbFunctions().refreshItems();
     return SafeArea(
       child: ListView(
         children: [
