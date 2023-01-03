@@ -10,9 +10,9 @@ class TodoDataModel extends HiveObject {
   @HiveField(2)
   String description;
   @HiveField(3)
-  String? date;
+  var date;
 
   TodoDataModel({required this.title, required this.description}) {
-    date = DateTime.now() as String;
+    date = DateTime.now();
   }
 }

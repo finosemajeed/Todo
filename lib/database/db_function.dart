@@ -1,19 +1,10 @@
 import 'dart:developer';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:todo_hive/database/model/todo_data_model.dart';
 
-ValueNotifier<dynamic> todoNotifier = ValueNotifier([]);
-
-// class Boxes {
-//   static Box<TodoDataModel> getTodo() => Hive.box('Todo');
-// }
-
-// class HiveService {
-//   static Box todoBox = Boxes.getTodo();
-// }
+ValueNotifier<List<TodoDataModel>> todoNotifier = ValueNotifier([]);
 
 class DbFunctions {
   DbFunctions._internal();
@@ -23,43 +14,40 @@ class DbFunctions {
     return instance;
   }
 
-  final _todoBox = Hive.box('Todo');
+  // final _todoBox = Hive.box('todo');
 
-  void refreshItems() {
-    final data = _todoBox.keys.map((key) {
-      final value = _todoBox.get(key);
-      return {
-        'id': key,
-        'title': value['title'],
-        'description': value['description']
-      };
-    }).toList();
+  void refreshItems() async {
+    final _todoBox = await Hive.openBox<TodoDataModel>('todo');
     todoNotifier.value.clear();
-    todoNotifier.value.addAll(data.reversed.toList());
+    todoNotifier.value.addAll(_todoBox.values.toList());
     todoNotifier.notifyListeners();
   }
 
   Future<void> createTodo(TodoDataModel todo) async {
+    final _todoBox = await Hive.openBox<TodoDataModel>('todo');
     final key = await _todoBox.add(todo);
-  
-    log(key.toString());
+    todo.id = key;
+    todo.save();
     refreshItems();
   }
 
-  TodoDataModel readTodo(int key) {
+  Future<TodoDataModel?> readTodo(int key) async {
+    final _todoBox = await Hive.openBox<TodoDataModel>('todo');
     final items = _todoBox.get(key);
     return items;
   }
 
   Future<void> updateTodo(int itemkey, TodoDataModel newTodo) async {
+    final _todoBox = await Hive.openBox<TodoDataModel>('todo');
     await _todoBox.put(itemkey, newTodo);
     refreshItems();
   }
 
   Future<void> deleteTodo(int itemKey, BuildContext ctx) async {
+    final _todoBox = await Hive.openBox<TodoDataModel>('todo');
     await _todoBox.delete(itemKey);
     refreshItems();
     ScaffoldMessenger.of(ctx)
-        .showSnackBar(SnackBar(content: Text('Succesfully removed')));
+        .showSnackBar(const SnackBar(content: Text('Succesfully removed')));
   }
 }

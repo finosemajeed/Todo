@@ -21,7 +21,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
               onTap: ((index) {
                 indexChangeNotifier.value = index;
               }),
-              items: [
+              items: const [
                 BottomNavigationBarItem(
                     icon: Icon(Icons.home_filled), label: ""),
                 BottomNavigationBarItem(icon: Icon(Icons.start), label: "")

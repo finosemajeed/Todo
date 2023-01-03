@@ -1,8 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:todo_hive/core/color_config.dart';
-import 'package:todo_hive/database/db_function.dart';
-import 'package:todo_hive/database/no.dart';
 import 'package:todo_hive/presentation/home_screen/add_task_screen.dart';
 import 'package:todo_hive/presentation/home_screen/home_screen.dart';
 import 'package:todo_hive/presentation/main_screen/widgets/custom_bottomnaviagtion_bar.dart';
@@ -11,15 +9,14 @@ import 'package:todo_hive/presentation/status_screen/status_screen.dart';
 class MainScreen extends StatelessWidget {
   MainScreen({super.key});
   final _pages = [
-    HomeScreen(),
-    StatusScreen(),
+    const HomeScreen(),
+    const StatusScreen(),
   ];
 
   @override
   Widget build(BuildContext context) {
-    DbFunctions().refreshItems();
     return Scaffold(
-      drawer: Drawer(),
+      drawer: const Drawer(),
       backgroundColor: backGroundColor,
       appBar: AppBar(
         actions: [
@@ -32,9 +29,9 @@ class MainScreen extends StatelessWidget {
             ),
           )
         ],
-        iconTheme: IconThemeData(color: kOrange),
+        iconTheme: const IconThemeData(color: kOrange),
         backgroundColor: kAppbarColor,
-        shape: RoundedRectangleBorder(
+        shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(30),
                 bottomRight: Radius.circular(30))),
@@ -50,13 +47,13 @@ class MainScreen extends StatelessWidget {
               .push(MaterialPageRoute(builder: ((context) => AddTaskScreen())))
         },
         backgroundColor: kBlueButton,
-        child: Icon(
+        child: const Icon(
           Icons.add,
           color: kBlack,
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      bottomNavigationBar: CustomBottomNavigationBar(),
+      bottomNavigationBar: const CustomBottomNavigationBar(),
     );
   }
 }

@@ -21,7 +21,7 @@ class TodoDataModelAdapter extends TypeAdapter<TodoDataModel> {
       description: fields[2] as String,
     )
       ..id = fields[0] as int?
-      ..date = fields[3] as String?;
+      ..date = fields[3] as dynamic;
   }
 
   @override

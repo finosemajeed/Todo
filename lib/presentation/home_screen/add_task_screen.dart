@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:todo_hive/core/color_config.dart';
 import 'package:todo_hive/database/db_function.dart';
 import 'package:todo_hive/database/model/todo_data_model.dart';
-import 'package:todo_hive/database/no.dart';
 
 class AddTaskScreen extends StatelessWidget {
   AddTaskScreen({super.key});
@@ -14,23 +11,23 @@ class AddTaskScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    DbFunctions().refreshItems();
+    // DbFunctions().refreshItems();
     return Scaffold(
       backgroundColor: backGroundColor,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        iconTheme: IconThemeData(color: kWhite),
+        iconTheme: const IconThemeData(color: kWhite),
       ),
-      body: Container(
+      body: SizedBox(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
         child: Column(
           children: [
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
               child: TextFormField(
-                style: TextStyle(color: kWhite),
+                style: const TextStyle(color: kWhite),
                 controller: titleController,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
@@ -48,9 +45,9 @@ class AddTaskScreen extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
               child: TextFormField(
-                style: TextStyle(color: kWhite),
+                style: const TextStyle(color: kWhite),
                 controller: descriptionController,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
@@ -67,47 +64,75 @@ class AddTaskScreen extends StatelessWidget {
                 },
               ),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: kBlueButton,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20),
                 ),
-                minimumSize: Size(150, 40),
+                minimumSize: const Size(150, 40),
               ),
               onPressed: () {
-                createTodo();
+                createTodo(context);
                 titleController.text = "";
                 descriptionController.text = "";
               },
-              child: Text("Confirm"),
+              child: const Text("Confirm"),
             ),
+            SizedBox(height: 20),
+            Wrap(
+              children: [
+                Checkbox(value: true, onChanged: ((value) => {})),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width / 1.33,
+                  child: TextFormField(
+                    style: TextStyle(color: Colors.grey),
+                    decoration: const InputDecoration(
+                      labelText: "Title",
+                    ),
+                    validator: (value) {
+                      if (value == null || value.trim().isEmpty) {
+                        return "Please enter your task title";
+                      }
+                      return null;
+                    },
+                  ),
+                ),
+                IconButton(
+                    onPressed: (() => {}),
+                    icon: Icon(
+                      Icons.check,
+                      color: kOrange,
+                    ))
+              ],
+            )
           ],
         ),
       ),
     );
   }
 
-  void updateTodo(int itemKey) {
-    if (itemKey != null) {
-      final existingItem =
-          todoNotifier.value.firstWher((element) => element['id'] == itemKey);
-      titleController.text = existingItem['title'];
-      descriptionController.text = existingItem['description'];
-    }
+  void updateTodo(int? itemKey) {
     final title = titleController.text.trim();
     final description = descriptionController.text.trim();
-    final TodoDataModel newTodo =
-        TodoDataModel(title: title, description: description);
-    DbFunctions().updateTodo(itemKey, newTodo);
+    if (itemKey != null) {
+      final existingItem =
+          todoNotifier.value.firstWhere((element) => element.id == itemKey);
+      titleController.text = existingItem.title;
+      descriptionController.text = existingItem.description;
+      final TodoDataModel newTodo =
+          TodoDataModel(title: title, description: description);
+      DbFunctions().updateTodo(itemKey, newTodo);
+    }
   }
 
-  void createTodo() {
+  void createTodo(BuildContext ctx) {
     final title = titleController.text.trim();
     final description = descriptionController.text.trim();
     final TodoDataModel todo =
         TodoDataModel(title: title, description: description);
     DbFunctions().createTodo(todo);
+    Navigator.pop(ctx);
   }
 }
