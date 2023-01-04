@@ -1,16 +1,21 @@
 # todo_hive
 
-A new Flutter project.
+A todo project build using dart and flutter
+storage is managed using Hive database 
 
-## Getting Started
+#Screenshots
+## Homescreen 
 
-This project is a starting point for a Flutter application.
+![Home page_google-pixel4xl-ohsoorange-portrait](https://user-images.githubusercontent.com/36195634/210618024-472ce427-a86e-4d59-ab25-1bebee56cb1d.png)
 
-A few resources to get you started if this is your first Flutter project:
+## Tasks Details page
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+![Details view_google-pixel4xl-ohsoorange-portrait](https://user-images.githubusercontent.com/36195634/210618168-4a73f795-ffbc-4246-9460-8997cc37e2c9.png)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Add new Task
+
+![add todo_google-pixel4xl-ohsoorange-portrait](https://user-images.githubusercontent.com/36195634/210618259-b9a4ce2f-b4b4-4641-8dfb-261a703e265a.png)
+
+## Add Task and Todo's page
+
+![Add new task and todo_google-pixel4xl-ohsoorange-portrait](https://user-images.githubusercontent.com/36195634/210618379-fa46e216-7d7e-43cd-91ab-5a018933d03f.png)
