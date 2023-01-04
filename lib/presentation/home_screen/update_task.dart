@@ -1,9 +1,5 @@
 import 'dart:developer';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:todo_hive/core/color_config.dart';
 import 'package:todo_hive/database/db_function.dart';
 import 'package:todo_hive/database/model/todo_data_model.dart';
