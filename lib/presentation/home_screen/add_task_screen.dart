@@ -113,25 +113,12 @@ class AddTaskScreen extends StatelessWidget {
     );
   }
 
-  void updateTodo(int? itemKey) {
-    final title = titleController.text.trim();
-    final description = descriptionController.text.trim();
-    if (itemKey != null) {
-      final existingItem =
-          todoNotifier.value.firstWhere((element) => element.id == itemKey);
-      titleController.text = existingItem.title;
-      descriptionController.text = existingItem.description;
-      final TodoDataModel newTodo =
-          TodoDataModel(title: title, description: description);
-      DbFunctions().updateTodo(itemKey, newTodo);
-    }
-  }
-
   void createTodo(BuildContext ctx) {
     final title = titleController.text.trim();
     final description = descriptionController.text.trim();
-    final TodoDataModel todo =
-        TodoDataModel(title: title, description: description);
+    final List<String> data = [];
+    data.add(description);
+    final TodoDataModel todo = TodoDataModel(title: title, description: data);
     DbFunctions().createTodo(todo);
     Navigator.pop(ctx);
   }

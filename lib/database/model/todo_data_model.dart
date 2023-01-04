@@ -6,13 +6,13 @@ class TodoDataModel extends HiveObject {
   @HiveField(0)
   int? id;
   @HiveField(1)
-  String title;
-  @HiveField(2)
-  String description;
+  String? title;
+  @HiveField(4)
+  List<String>? description;
   @HiveField(3)
   var date;
 
-  TodoDataModel({required this.title, required this.description}) {
+  TodoDataModel({this.title, this.description, this.id}) {
     date = DateTime.now();
   }
 }

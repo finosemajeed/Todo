@@ -20,6 +20,7 @@ class DbFunctions {
     final _todoBox = await Hive.openBox<TodoDataModel>('todo');
     todoNotifier.value.clear();
     todoNotifier.value.addAll(_todoBox.values.toList());
+    // _todoBox.clear();
     todoNotifier.notifyListeners();
   }
 
@@ -28,6 +29,7 @@ class DbFunctions {
     final key = await _todoBox.add(todo);
     todo.id = key;
     todo.save();
+    log(todo.id.toString());
     refreshItems();
   }
 
@@ -40,6 +42,8 @@ class DbFunctions {
   Future<void> updateTodo(int itemkey, TodoDataModel newTodo) async {
     final _todoBox = await Hive.openBox<TodoDataModel>('todo');
     await _todoBox.put(itemkey, newTodo);
+    log(_todoBox.get(itemkey).toString());
+    newTodo.save();
     refreshItems();
   }
 

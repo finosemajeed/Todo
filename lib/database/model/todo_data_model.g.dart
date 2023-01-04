@@ -17,11 +17,10 @@ class TodoDataModelAdapter extends TypeAdapter<TodoDataModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return TodoDataModel(
-      title: fields[1] as String,
-      description: fields[2] as String,
-    )
-      ..id = fields[0] as int?
-      ..date = fields[3] as dynamic;
+      title: fields[1] as String?,
+      description: (fields[4] as List?)?.cast<String>(),
+      id: fields[0] as int?,
+    )..date = fields[3] as dynamic;
   }
 
   @override
@@ -32,7 +31,7 @@ class TodoDataModelAdapter extends TypeAdapter<TodoDataModel> {
       ..write(obj.id)
       ..writeByte(1)
       ..write(obj.title)
-      ..writeByte(2)
+      ..writeByte(4)
       ..write(obj.description)
       ..writeByte(3)
       ..write(obj.date);

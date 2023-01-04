@@ -9,7 +9,7 @@ import 'package:todo_hive/presentation/status_screen/status_screen.dart';
 class MainScreen extends StatelessWidget {
   MainScreen({super.key});
   final _pages = [
-    const HomeScreen(),
+    HomeScreen(),
     const StatusScreen(),
   ];
 
