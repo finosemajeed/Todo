@@ -9,7 +9,9 @@ class UpdateTask extends StatelessWidget {
   final TodoDataModel data;
 
   TextEditingController todoController = TextEditingController();
-  final ValueNotifier<List<String>> updateTodoListNotifier = ValueNotifier([]);
+
+  late List<String> updateTodoList = [...?data.description];
+  late List<String> removeTodoList = [...?data.description];
 
   @override
   Widget build(BuildContext context) {
@@ -25,84 +27,112 @@ class UpdateTask extends StatelessWidget {
         child: ListView(
           shrinkWrap: true,
           primary: true,
-          physics: BouncingScrollPhysics(),
-          // crossAxisAlignment: CrossAxisAlignment.start,
-          // mainAxisSize: MainAxisSize.min,
+          physics: const BouncingScrollPhysics(),
           children: [
-            SizedBox(height: 5),
+            const SizedBox(height: 5),
             Text(
               data.title.toString(),
-              style: TextStyle(
+              style: const TextStyle(
                 color: kWhite,
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            TextFormField(
-              controller: todoController,
-              decoration: InputDecoration(
-                  label: Text('New Todo'),
-                  suffix: IconButton(
-                    onPressed: () {
-                      if (todoController.text.isNotEmpty) {
-                        updateTodoListNotifier.value.add(todoController.text);
-                        updateTodoListNotifier.notifyListeners();
-                      }
+            const SizedBox(height: 5),
+            SizedBox(
+              height: 70,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                  style: const TextStyle(color: kWhite),
+                  controller: todoController,
+                  decoration: InputDecoration(
+                    suffix: IconButton(
+                        onPressed: () {
+                          if (todoController.text.isNotEmpty) {
+                            updateTodoList.add(todoController.text);
+                            newTodo(data.id);
+                          }
 
-                      todoController.text = "";
-                      // log(todoList.toString());
-                      newTodo(data.id);
-                      log(data.id.toString());
-                    },
-                    icon: Icon(
-                      Icons.check,
-                      color: kOrange,
-                    ),
-                  )),
-            ),
-            ValueListenableBuilder(
-                valueListenable: updateTodoListNotifier,
-                builder: (context, ee, _) {
-                  return Expanded(
-                    child: ListView.builder(
-                      physics: ClampingScrollPhysics(),
-                      shrinkWrap: true,
-                      itemCount: data.description?.length ?? 0,
-                      itemBuilder: (context, index) {
-                        return ListTile(
-                          leading: Checkbox(
-                              value: false, onChanged: ((value) => {})),
-                          title: Text(
-                            // ee.elementAt(data.id!).description![index]
-                            data.description![index],
-                            style: TextStyle(color: kWhiteText),
-                          ),
-                        );
-                      },
-                    ),
-                  );
-                }),
-            Divider(),
-            Text('completed'),
-            ListView.builder(
-              shrinkWrap: true,
-              physics: ClampingScrollPhysics(),
-              itemCount: data.description?.length ?? 0,
-              itemBuilder: (context, index) {
-                return data.description!.isNotEmpty
-                    ? ListTile(
-                        leading: Icon(
+                          todoController.text = "";
+                        },
+                        icon: const Icon(
                           Icons.check,
                           color: kOrange,
+                        )),
+                    border: const OutlineInputBorder(),
+                    labelText: "Add Todo\'s",
+                    labelStyle: const TextStyle(
+                      color: kOrange,
+                    ),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return "Please enter your task description";
+                    }
+                    return null;
+                  },
+                ),
+              ),
+            ),
+            // ValueListenableBuilder(
+            //     valueListenable: todoNotifier,
+            //     builder: (context, ee, _) {
+            //       return ListView.builder(
+            //         physics: ClampingScrollPhysics(),
+            //         shrinkWrap: true,
+            //         itemCount: data.description?.length ?? 0,
+            //         itemBuilder: (context, index) {
+            //           return ListTile(
+            //             leading:
+            //                 Checkbox(value: false, onChanged: ((value) => {})),
+            //             title: Text(
+            //               // ee.elementAt(data.id!).description![index],
+
+            //               data.description![index],
+            //               style: TextStyle(color: kWhiteText),
+            //             ),
+            //           );
+            //         },
+            //       );
+            //     }),
+            const Divider(),
+            const Text(
+              'Todo\'s',
+              style: TextStyle(
+                color: kWhiteText,
+                fontSize: 18,
+              ),
+            ),
+            ListView.builder(
+              shrinkWrap: true,
+              physics: const ClampingScrollPhysics(),
+              itemCount: data.description?.length ?? 0,
+              itemBuilder: (context, index) {
+                final String item = data.description![index];
+                return data.description!.isNotEmpty
+                    ? Dismissible(
+                        key: Key(item),
+                        onDismissed: (direction) {
+                          removetodo(index, data.id!);
+                        },
+                        background: Container(
+                          color: Colors.red,
+                          alignment: Alignment.centerRight,
+                          child: Icon(Icons.delete),
                         ),
-                        title: Text(
-                          data.description![index],
-                          style: TextStyle(
-                              color: kWhiteText,
-                              decoration: TextDecoration.lineThrough),
+                        child: ListTile(
+                          leading: const Icon(
+                            Icons.check,
+                            color: kOrange,
+                          ),
+                          title: Text(
+                            data.description![index],
+                            style: const TextStyle(color: kWhiteText),
+                          ),
                         ),
                       )
-                    : Spacer();
+                    : const Spacer();
               },
             ),
           ],
@@ -112,16 +142,18 @@ class UpdateTask extends StatelessWidget {
   }
 
   void newTodo(int? itemKey) {
-    final description = todoController.text.trim();
     if (itemKey != null) {
-      // final existingItem =
-      //     todoNotifier.value.firstWhere((element) => element.id == itemKey);
-      // todoController.text = existingItem.description! as String;
-
       final TodoDataModel newTodo = TodoDataModel(
-          description: updateTodoListNotifier.value,
-          title: data.title,
-          id: data.id);
+          description: updateTodoList, title: data.title, id: data.id);
+      DbFunctions().updateTodo(itemKey, newTodo);
+    }
+  }
+
+  void removetodo(int? index, int itemKey) {
+    if (index != null) {
+      removeTodoList.removeAt(index);
+      final TodoDataModel newTodo = TodoDataModel(
+          description: removeTodoList, title: data.title, id: data.id);
       DbFunctions().updateTodo(itemKey, newTodo);
     }
   }

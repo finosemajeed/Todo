@@ -52,14 +52,13 @@ class HomeScreen extends StatelessWidget {
                                         ))));
                               },
                               child: CustomTodoCard(
-                                  title: data.title ?? '4', todos: '0'),
+                                  title: data.title.toString(),
+                                  todos: data.description?.length.toString() ??
+                                      '0'),
                             ))
                         .toList(),
                     GestureDetector(
                       onTap: () {
-                        // Navigator.of(context).push(MaterialPageRoute(
-                        //     builder: ((context) => AddTaskScreen())));
-
                         showDialog(
                           context: context,
                           builder: (context) {

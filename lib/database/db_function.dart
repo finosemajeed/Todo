@@ -43,7 +43,6 @@ class DbFunctions {
     final _todoBox = await Hive.openBox<TodoDataModel>('todo');
     await _todoBox.put(itemkey, newTodo);
     log(_todoBox.get(itemkey).toString());
-    newTodo.save();
     refreshItems();
   }
 
